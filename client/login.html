@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamflix - Sign In / Sign Up</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
+                        url('https://images.unsplash.com/photo-1574375927938-d5a98e8edd86?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+        }
+        .auth-card {
+            background-color: rgba(0, 0, 0, 0.75);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 450px;
+            padding: 50px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+        .auth-logo {
+            color: var(--primary-color);
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
+        }
+        .auth-title {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .form-group i {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+        .auth-input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            background-color: #333333;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition-fast);
+        }
+        .auth-input:focus {
+            background-color: #454545;
+            border-color: var(--text-muted);
+        }
+        .btn-auth {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: var(--transition-fast);
+        }
+        .btn-auth:hover {
+            background-color: var(--primary-color-hover);
+        }
+        .auth-switch {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        .auth-switch span {
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition-fast);
+        }
+        .auth-switch span:hover {
+            text-decoration: underline;
+        }
+        .auth-error {
+            background-color: rgba(229, 9, 20, 0.15);
+            border: 1px solid var(--primary-color);
+            color: #ff6b72;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">STREAMFLIX</div>
+            <div class="auth-error" id="auth-error-box">Invalid credentials</div>
+            
+            <!-- Login Form -->
+            <div id="login-form-container">
+                <h2 class="auth-title">Sign In</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="login-email" class="auth-input" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="login-password" class="auth-input" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn-auth">Sign In</button>
+                </form>
+                <div class="auth-switch">New to Streamflix? <span id="switch-to-signup">Sign up now.</span></div>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signup-form-container" style="display: none;">
+                <h2 class="auth-title">Sign Up</h2>
+                <form id="signup-form">
+                    <div class="form-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="signup-username" class="auth-input" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="signup-email" class="auth-input" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signup-password" class="auth-input" placeholder="Password (min. 6 characters)" minlength="6" required>
+                    </div>
+                    <div class="form-group" style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
+                        <input type="checkbox" id="signup-isadmin" style="cursor: pointer; width: 16px; height: 16px;">
+                        <label for="signup-isadmin" style="font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">Register as Admin Profile</label>
+                    </div>
+                    <button type="submit" class="btn-auth">Sign Up</button>
+                </form>
+                <div class="auth-switch">Already have an account? <span id="switch-to-login">Sign in now.</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginContainer = document.getElementById('login-form-container');
+            const signupContainer = document.getElementById('signup-form-container');
+            const errorBox = document.getElementById('auth-error-box');
+
+            // Switch views
+            document.getElementById('switch-to-signup').addEventListener('click', () => {
+                loginContainer.style.display = 'none';
+                signupContainer.style.display = 'block';
+                errorBox.style.display = 'none';
+            });
+
+            document.getElementById('switch-to-login').addEventListener('click', () => {
+                signupContainer.style.display = 'none';
+                loginContainer.style.display = 'block';
+                errorBox.style.display = 'none';
+            });
+
+            const showError = (msg) => {
+                errorBox.textContent = msg;
+                errorBox.style.display = 'block';
+            };
+
+            // Handle Login Form
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                errorBox.style.display = 'none';
+
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+
+                try {
+                    const res = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+                    const data = await res.json();
+
+                    if (data.success) {
+                        localStorage.setItem('streamflix_token', data.token);
+                        localStorage.setItem('streamflix_user', JSON.stringify({
+                            username: data.username,
+                            email: data.email,
+                            isAdmin: data.isAdmin
+                        }));
+                        window.location.href = 'index.html';
+                    } else {
+                        showError(data.message || 'Login failed');
+                    }
+                } catch (err) {
+                    showError('Network error connecting to backend.');
+                }
+            });
+
+            // Handle Signup Form
+            document.getElementById('signup-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                errorBox.style.display = 'none';
+
+                const username = document.getElementById('signup-username').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                const isAdmin = document.getElementById('signup-isadmin').checked;
+
+                try {
+                    const res = await fetch('/api/auth/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, email, password, isAdmin })
+                    });
+                    const data = await res.json();
+
+                    if (data.success) {
+                        localStorage.setItem('streamflix_token', data.token);
+                        localStorage.setItem('streamflix_user', JSON.stringify({
+                            username: data.username,
+                            email: data.email,
+                            isAdmin: data.isAdmin
+                        }));
+                        window.location.href = 'index.html';
+                    } else {
+                        showError(data.message || 'Registration failed');
+                    }
+                } catch (err) {
+                    showError('Network error connecting to backend.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

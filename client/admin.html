@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamflix - Admin Dashboard</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            padding-top: 80px;
+        }
+        .admin-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 4%;
+        }
+        .admin-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        .admin-title {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+        }
+        .admin-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        .admin-card-title {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        .admin-form-group {
+            margin-bottom: 15px;
+        }
+        .admin-form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .admin-form-input {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: #2b2b2b;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition-fast);
+        }
+        .admin-form-input:focus {
+            border-color: var(--text-dim);
+            background-color: #333333;
+        }
+        .admin-form-file {
+            background-color: transparent;
+            padding: 5px 0;
+            color: var(--text-muted);
+        }
+        .btn-admin-submit {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            width: 100%;
+            padding: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: var(--transition-fast);
+        }
+        .btn-admin-submit:hover {
+            background-color: var(--primary-color-hover);
+        }
+        /* Movie List panel */
+        .movies-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .movies-list-table th, .movies-list-table td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .movies-list-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .movies-list-table img {
+            width: 80px;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .btn-table-action {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            margin-right: 15px;
+            transition: var(--transition-fast);
+        }
+        .btn-table-action.delete:hover {
+            color: var(--primary-color-hover);
+        }
+        .alert-box {
+            background-color: rgba(70, 211, 105, 0.15);
+            border: 1px solid #46d369;
+            color: #71df8d;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .alert-box.error {
+            background-color: rgba(229, 9, 20, 0.15);
+            border: 1px solid var(--primary-color);
+            color: #ff6b72;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav id="navbar" class="navbar scrolled">
+        <div class="nav-left">
+            <div class="logo" onclick="window.location.href='index.html'">STREAMFLIX</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shows.html">TV Shows</a></li>
+                <li><a href="movies.html">Movies</a></li>
+                <li><a href="popular.html">New & Popular</a></li>
+                <li><a href="mylist.html">My List</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <div class="user-profile">
+                <img src="profile.jpg" alt="Profile" class="avatar">
+                <span style="font-size: 0.9rem;" id="admin-user-name">Admin</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <div class="admin-header-row">
+            <h1 class="admin-title">Admin Dashboard</h1>
+            <button class="btn btn-info" onclick="logout()" style="padding: 8px 16px; font-size: 0.9rem;">Log Out</button>
+        </div>
+
+        <div class="alert-box" id="admin-alert">Operation successful</div>
+
+        <div class="admin-grid">
+            <!-- Left: Add Movie Card -->
+            <div class="admin-card">
+                <h2 class="admin-card-title" id="form-title">Upload New Movie/Show</h2>
+                <form id="upload-form" enctype="multipart/form-data">
+                    <input type="hidden" id="edit-movie-id">
+                    <div class="admin-form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" class="admin-form-input" required>
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" class="admin-form-input" style="height: 80px;" required></textarea>
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="genre">Genre (Comma separated)</label>
+                        <input type="text" id="genre" class="admin-form-input" placeholder="Sci-Fi, Action, Thriller" required>
+                    </div>
+                    <div class="admin-form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label for="year">Release Year</label>
+                            <input type="number" id="year" class="admin-form-input" required>
+                        </div>
+                        <div>
+                            <label for="rating">Maturity Rating</label>
+                            <input type="text" id="rating" class="admin-form-input" placeholder="PG-13 / R" required>
+                        </div>
+                    </div>
+                    <div class="admin-form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label for="duration">Duration</label>
+                            <input type="text" id="duration" class="admin-form-input" placeholder="2h 15m / 3 Seasons" required>
+                        </div>
+                        <div>
+                            <label for="popular">Popular Flag</label>
+                            <select id="popular" class="admin-form-input">
+                                <option value="false">No (Normal)</option>
+                                <option value="true">Yes (Trending Banner)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admin-form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label for="category">Category Row</label>
+                            <select id="category" class="admin-form-input">
+                                <option value="trending">Trending Now</option>
+                                <option value="scifi">Sci-Fi & Thrillers</option>
+                                <option value="action">Action Blockbusters</option>
+                                <option value="dramas">Award-winning Dramas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="type">Content Type</label>
+                            <select id="type" class="admin-form-input">
+                                <option value="movie">Movie</option>
+                                <option value="show">TV Show</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="cast">Cast members (Comma separated)</label>
+                        <input type="text" id="cast" class="admin-form-input" placeholder="Actor 1, Actor 2">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="mood">Mood Tags (Comma separated)</label>
+                        <input type="text" id="mood" class="admin-form-input" placeholder="Mind-bending, Gritty">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="poster">Poster Image</label>
+                        <input type="file" id="poster" class="admin-form-input admin-form-file" accept="image/*">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="video">Video File</label>
+                        <input type="file" id="video" class="admin-form-input admin-form-file" accept="video/*">
+                    </div>
+                    <button type="submit" class="btn-admin-submit" id="btn-submit">Upload to Streamflix</button>
+                    <button type="button" id="btn-cancel" class="btn-admin-submit" style="background-color: #555; display: none; margin-top: 5px;">Cancel Edit</button>
+                </form>
+            </div>
+
+            <!-- Right: Movie Catalog List -->
+            <div class="admin-card" style="overflow-x: auto;">
+                <h2 class="admin-card-title">Catalog Inventory</h2>
+                <table class="movies-list-table">
+                    <thead>
+                        <tr>
+                            <th>Backdrop</th>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Category</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-list">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('streamflix_token');
+        const user = JSON.parse(localStorage.getItem('streamflix_user'));
+
+        // Auth Check
+        if (!token || !user || !user.isAdmin) {
+            alert("Unauthorized! Admin profile required.");
+            window.location.href = 'login.html';
+        }
+
+        if (user) {
+            document.getElementById('admin-user-name').textContent = `${user.username} (Admin)`;
+        }
+
+        function logout() {
+            localStorage.removeItem('streamflix_token');
+            localStorage.removeItem('streamflix_user');
+            window.location.href = 'login.html';
+        }
+
+        const alertBox = document.getElementById('admin-alert');
+        const showSuccess = (msg) => {
+            alertBox.textContent = msg;
+            alertBox.className = 'alert-box';
+            alertBox.style.display = 'block';
+            setTimeout(() => alertBox.style.display = 'none', 3000);
+        };
+        const showError = (msg) => {
+            alertBox.textContent = msg;
+            alertBox.className = 'alert-box error';
+            alertBox.style.display = 'block';
+            setTimeout(() => alertBox.style.display = 'none', 4000);
+        };
+
+        // Load Catalog Table
+        async function loadCatalog() {
+            try {
+                const res = await fetch('/api/movies');
+                const data = await res.json();
+                
+                const tbody = document.getElementById('inventory-list');
+                tbody.innerHTML = '';
+
+                if (data.success && data.data.length > 0) {
+                    data.data.forEach(movie => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><img src="${movie.poster.startsWith('/uploads') ? movie.poster : movie.poster}" alt=""></td>
+                            <td style="font-weight: 600;">${movie.title}</td>
+                            <td style="text-transform: capitalize;">${movie.type}</td>
+                            <td style="text-transform: capitalize;">${movie.category}</td>
+                            <td>
+                                <button class="btn-table-action" onclick="editMovie('${movie._id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-table-action delete" onclick="deleteMovie('${movie._id}')"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No movies uploaded yet.</td></tr>`;
+                }
+            } catch (err) {
+                showError('Error loading catalog.');
+            }
+        }
+
+        // Handle Add/Edit Movie
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const editId = document.getElementById('edit-movie-id').value;
+            const isEditing = !!editId;
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('genre', document.getElementById('genre').value);
+            formData.append('year', document.getElementById('year').value);
+            formData.append('rating', document.getElementById('rating').value);
+            formData.append('duration', document.getElementById('duration').value);
+            formData.append('popular', document.getElementById('popular').value);
+            formData.append('category', document.getElementById('category').value);
+            formData.append('type', document.getElementById('type').value);
+            formData.append('cast', document.getElementById('cast').value);
+            formData.append('mood', document.getElementById('mood').value);
+
+            const posterInput = document.getElementById('poster');
+            const videoInput = document.getElementById('video');
+
+            if (posterInput.files[0]) formData.append('poster', posterInput.files[0]);
+            if (videoInput.files[0]) formData.append('video', videoInput.files[0]);
+
+            if (!isEditing && (!posterInput.files[0] || !videoInput.files[0])) {
+                showError("Please select both a Poster image and a Video file for new uploads.");
+                return;
+            }
+
+            const url = isEditing ? `/api/movies/${editId}` : '/api/movies';
+            const method = isEditing ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showSuccess(isEditing ? 'Movie details updated!' : 'Movie uploaded successfully!');
+                    resetForm();
+                    loadCatalog();
+                } else {
+                    showError(data.message || 'Operation failed');
+                }
+            } catch (err) {
+                showError('Error processing request.');
+            }
+        });
+
+        // Edit Mode trigger
+        async function editMovie(id) {
+            try {
+                const res = await fetch(`/api/movies/${id}`);
+                const data = await res.json();
+                
+                if (data.success) {
+                    const m = data.data;
+                    document.getElementById('edit-movie-id').value = m._id;
+                    document.getElementById('title').value = m.title;
+                    document.getElementById('description').value = m.description;
+                    document.getElementById('genre').value = m.genre.join(', ');
+                    document.getElementById('year').value = m.year;
+                    document.getElementById('rating').value = m.rating;
+                    document.getElementById('duration').value = m.duration;
+                    document.getElementById('popular').value = m.popular ? "true" : "false";
+                    document.getElementById('category').value = m.category;
+                    document.getElementById('type').value = m.type;
+                    document.getElementById('cast').value = m.cast ? m.cast.join(', ') : '';
+                    document.getElementById('mood').value = m.mood ? m.mood.join(', ') : '';
+
+                    document.getElementById('form-title').textContent = "Update Movie Details";
+                    document.getElementById('btn-submit').textContent = "Save Changes";
+                    document.getElementById('btn-cancel').style.display = 'block';
+                    
+                    document.getElementById('title').focus();
+                }
+            } catch (err) {
+                showError('Error loading movie data.');
+            }
+        }
+
+        // Delete movie
+        async function deleteMovie(id) {
+            if (!confirm("Are you sure you want to delete this movie and its files from the server?")) return;
+
+            try {
+                const res = await fetch(`/api/movies/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showSuccess('Movie deleted from inventory!');
+                    loadCatalog();
+                } else {
+                    showError(data.message || 'Delete failed');
+                }
+            } catch (err) {
+                showError('Network error deleting item.');
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('edit-movie-id').value = '';
+            document.getElementById('upload-form').reset();
+            document.getElementById('form-title').textContent = "Upload New Movie/Show";
+            document.getElementById('btn-submit').textContent = "Upload to Streamflix";
+            document.getElementById('btn-cancel').style.display = 'none';
+        }
+
+        document.getElementById('btn-cancel').addEventListener('click', resetForm);
+
+        // Init load
+        loadCatalog();
+    </script>
+</body>
+</html>
